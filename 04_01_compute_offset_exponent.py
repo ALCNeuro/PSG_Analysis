@@ -5,7 +5,7 @@ Created on Mon Oct 16 01:03:30 2023
 
 @author: arthurlecoz
 
-explore_fooof.py
+04_01_compute_offset_exponent.py
 
 """
 # %% Paths

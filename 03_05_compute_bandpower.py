@@ -5,7 +5,7 @@ Created on Sat May 11 18:44:41 2024
 
 @author: arthurlecoz
 
-ALC_pcompute_bandpower.py
+03_05_compute_bandpower.py
 
 """
 # %% Paths

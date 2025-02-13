@@ -5,7 +5,7 @@ Created on Sat May 11 18:44:41 2024
 
 @author: arthurlecoz
 
-ALC_periodic_PSD.py
+03_03_compute_aperiodicpower
 
 """
 # %% Paths
@@ -64,10 +64,6 @@ window = "hamming"
 
 # %% Loop
 
-big_dic_psd_savepath = os.path.join(
-    fig_dir, "fooof_psd_flat_spectra_2.pickle"
-    )
-
 stages = ["WAKE", "N1", "N2", "N3", "REM"]
 
 # big_dic = {subtype : {stage : {chan : [] for chan in channels}
@@ -80,7 +76,7 @@ def compute_periodic_psd(file) :
     sub_id = file.split('/')[-1].split('_PSG1')[0]
     
     this_subject_savepath = os.path.join(
-        fig_dir, "fooof", f"{sub_id}_periodic_psd.pickle"
+        fig_dir, "fooof", f"{sub_id}_aperiodic_psd_nolowess_wakeb.pickle"
         )
     
     if not os.path.exists(this_subject_savepath) : 
@@ -97,8 +93,8 @@ def compute_periodic_psd(file) :
         epochs = epochs[epochs.metadata.divBin2 != "noBin"]
         # sf = epochs.info['sfreq']
         
-        # metadata = epochs.metadata.reset_index()
-            
+        metadata = epochs.metadata.reset_index()
+        
         if len(stages) < 5 :
             print("not adapted yet...")
             # for stage in ["WAKE", "N1", "REM"] :
@@ -179,29 +175,22 @@ def compute_periodic_psd(file) :
                             picks = channels
                             )
                     for i_ch, channel in enumerate(channels) :
-                        print(f'processing stage {channel}')
+                        print(f'processing channel {channel}')
                         for i_epoch in range(len(epochs[stage])) :
                             this_power = temp_power[i_epoch]                        
                             
-                            psd = lowess(np.squeeze(
-                                this_power.copy().pick(channel).get_data()), 
-                                freqs, 0.075)[:, 1]
+                            # psd = lowess(np.squeeze(
+                            #     this_power.copy().pick(channel).get_data()), 
+                            #     freqs, 0.075)[:, 1]
+                            psd = np.squeeze(
+                                this_power.copy().pick(channel).get_data())
                             
                             if np.any(psd < 0) :
                                 for id_0 in np.where(psd<0)[0] :
                                     psd[id_0] = abs(psd).min()
                                     
-                            fm = FOOOF(peak_width_limits = [.5, 4], aperiodic_mode="fixed")
-                            fm.add_data(freqs, psd)
-                            fm.fit()
+                            temp_list.append(psd) 
                             
-                            init_ap_fit = gen_aperiodic(
-                                fm.freqs, 
-                                fm._robust_ap_fit(fm.freqs, fm.power_spectrum)
-                                )
-                            
-                            init_flat_spec = fm.power_spectrum - init_ap_fit
-                            temp_list.append(init_flat_spec)
                         temp_dic[stage][channel].append(
                             np.nanmean(temp_list, axis = 0)
                             )
