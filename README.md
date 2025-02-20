@@ -27,20 +27,6 @@ This repository includes scripts for:
 
 These scripts follow a modular approach, making it easy to customize your analysis workflow.
 
-## Installation
-### Prerequisites
-Ensure you have Python installed (recommended version: Python 3.8+). You will also need some essential libraries, which can be installed using:
-
-```bash
-# Ensure requirements.txt exists in the repository
-if [ ! -f requirements.txt ]; then
-    echo "requirements.txt not found! Installing necessary packages manually."
-    pip install numpy pandas mne yasa matplotlib seaborn scipy
-else
-    pip install -r requirements.txt
-fi
-```
-
 ## Usage
 Each script serves a specific purpose in the pipeline. Follow these steps:
 
@@ -86,4 +72,4 @@ These scripts require:
 
 ---
 
-### 🚀 Happy analyzing, and best of luck with your PhD! 🚀
+### 🚀 Happy analyzing, and best of luck! 🚀
